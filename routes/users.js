@@ -25,4 +25,27 @@ router.post("/", (req, res, next) => {
   });
 });
 
+router.post("/login", (req, res, next) => {
+  console.log(req.body);
+  let loginData = req.body;
+  MongoClient.connect(url, { useUnifiedTopology: true }, (err, db) => {
+    if (err) throw err;
+    let myDB = db.db("sample_training");
+    myDB
+      .collection("users")
+      .findOne(
+        { email: loginData.email, password: loginData.password },
+        (err, result) => {
+          if (err) throw err;
+          if (result !== null) {
+            res.send({ logged: true, uname: result.uname });
+          } else {
+            res.send({ logged: false });
+          }
+          db.close();
+        }
+      );
+  });
+});
+
 module.exports = router;
