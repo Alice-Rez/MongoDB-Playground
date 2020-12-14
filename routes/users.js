@@ -18,6 +18,7 @@ router.post("/", (req, res, next) => {
     let myDB = db.db("sample_training");
     myDB.collection("users").insertOne(newUser, (err, result) => {
       if (err) throw err;
+      console.log(result);
       res.send("new user added to database");
       db.close();
     });
