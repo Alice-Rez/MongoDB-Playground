@@ -10,6 +10,21 @@ router.get("/", function (req, res, next) {
   res.send("respond with a resource");
 });
 
+router.post("/find", (req, res, next) => {
+  let { email } = req.body;
+  console.log(email);
+  MongoClient.connect(url, { useUnifiedTopology: true }, (err, db) => {
+    if (err) throw err;
+    let myDB = db.db("sample_training");
+    myDB.collection("users").findOne({ email: email }, (err, result) => {
+      if (err) throw err;
+      console.log(result);
+      res.send(result);
+      db.close();
+    });
+  });
+});
+
 router.post("/", (req, res, next) => {
   console.log(req.body);
   let newUser = req.body;
