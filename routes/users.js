@@ -6,8 +6,21 @@ const url =
   "mongodb+srv://fahim:fahim@cluster0.zhe8p.mongodb.net/?retryWrites=true&w=majority";
 
 /* GET users listing. */
-router.get("/", function (req, res, next) {
-  res.send("respond with a resource");
+router.get("/all", function (req, res, next) {
+  MongoClient.connect(url, { useUnifiedTopology: true }, (err, db) => {
+    if (err) throw err;
+    let myDB = db.db("sample_training");
+    myDB
+      .collection("users")
+      .find({}, { projection: { password: 0, _id: 0 } })
+      .sort({ email: 1 })
+      .toArray((err, result) => {
+        if (err) throw err;
+        console.log(result);
+        res.send(result);
+        db.close();
+      });
+  });
 });
 
 router.post("/find", (req, res, next) => {
@@ -25,7 +38,7 @@ router.post("/find", (req, res, next) => {
   });
 });
 
-router.post("/", (req, res, next) => {
+router.post("/register", (req, res, next) => {
   console.log(req.body);
   let newUser = req.body;
   MongoClient.connect(url, { useUnifiedTopology: true }, (err, db) => {
