@@ -38,10 +38,34 @@ router.post("/login", (req, res, next) => {
         (err, result) => {
           if (err) throw err;
           if (result !== null) {
-            res.send({ logged: true, uname: result.uname });
+            res.send({
+              logged: true,
+              uname: result.uname,
+              email: result.email,
+            });
           } else {
             res.send({ logged: false });
           }
+          db.close();
+        }
+      );
+  });
+});
+
+router.post("/update", (req, res, next) => {
+  console.log(req.body);
+  let { userID, password, newPassword } = req.body;
+  MongoClient.connect(url, { useUnifiedTopology: true }, (err, db) => {
+    if (err) throw err;
+    let myDB = db.db("sample_training");
+    myDB
+      .collection("users")
+      .updateOne(
+        { email: userID, password: password },
+        { $set: { password: newPassword } },
+        (err, result) => {
+          if (err) throw err;
+          res.send(result);
           db.close();
         }
       );
