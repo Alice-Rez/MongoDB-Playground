@@ -80,7 +80,7 @@ router.post("/login", (req, res, next) => {
   });
 });
 
-router.post("/update", (req, res, next) => {
+router.put("/update", (req, res, next) => {
   console.log(req.body);
   let { userID, password, newPassword } = req.body;
   MongoClient.connect(url, { useUnifiedTopology: true }, (err, db) => {
