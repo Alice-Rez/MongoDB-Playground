@@ -21,9 +21,20 @@ router.get("/add", (req, res, next) => {
       contributors: [String],
       deadline: { type: Date, default: Date.now },
     });
-  });
 
-  res.send("connection made");
+    let projectModel = mongoose.model("projects", projectSchema);
+
+    let projectFlight = new projectModel({
+      name: "Flight search",
+      contributors: ["Bel", "Willy", "Alice"],
+      deadline: 30 - 01 - 2021,
+    });
+
+    projectFlight.save((err, result) => {
+      if (err) throw err;
+      res.send(result);
+    });
+  });
 });
 
 module.exports = router;
