@@ -31,10 +31,11 @@ router.post("/login", (req, res, next) => {
   UserModel.find({ email: loginData.email, password: loginData.password })
     .then((result) => {
       if (result.length) {
+        console.log(result);
         res.send({
           logged: true,
-          uname: result.uname,
-          email: result.email,
+          uname: result[0].uname,
+          email: result[0].email,
         });
       } else {
         res.send({ logged: false });
@@ -45,23 +46,14 @@ router.post("/login", (req, res, next) => {
 });
 
 router.put("/update", (req, res, next) => {
-  // console.log(req.body);
-  // let { userID, password, newPassword } = req.body;
-  // MongoClient.connect(url, { useUnifiedTopology: true }, (err, db) => {
-  //   if (err) throw err;
-  //   let myDB = db.db("sample_training");
-  //   myDB
-  //     .collection("users")
-  //     .updateOne(
-  //       { email: userID, password: password },
-  //       { $set: { password: newPassword } },
-  //       (err, result) => {
-  //         if (err) throw err;
-  //         res.send(result);
-  //         db.close();
-  //       }
-  //     );
-  // });
+  console.log(req.body);
+  let { userID, password, newPassword } = req.body;
+  UserModel.updateOne(
+    { email: userID, password: password },
+    { password: newPassword }
+  )
+    .then((result) => res.send(result))
+    .catch((err) => res.send(err));
 });
 
 module.exports = router;
