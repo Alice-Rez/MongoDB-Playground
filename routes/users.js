@@ -12,12 +12,7 @@ router.get("/all", function (req, res, next) {
 router.post("/register", (req, res, next) => {
   console.log(req.body);
   let newUser = req.body;
-  let addedUser = new UserModel({
-    fullName: newUser.fullName,
-    email: newUser.email,
-    uname: newUser.uname,
-    password: newUser.password,
-  });
+  let addedUser = new UserModel(newUser);
 
   addedUser
     .save()
