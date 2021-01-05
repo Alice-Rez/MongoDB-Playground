@@ -9,14 +9,6 @@ router.get("/all", function (req, res, next) {
     .catch((err) => res.send(err));
 });
 
-router.post("/find", (req, res, next) => {
-  let { email } = req.body;
-  console.log(email);
-  UserModel.find({ email: email })
-    .then((result) => res.send(result))
-    .catch((err) => res.send(err));
-});
-
 router.post("/register", (req, res, next) => {
   console.log(req.body);
   let newUser = req.body;
@@ -30,34 +22,26 @@ router.post("/register", (req, res, next) => {
   addedUser
     .save()
     .then((result) => res.send(result))
-    .catch((err) => console.log(err));
+    .catch((err) => res.send(err));
 });
 
 router.post("/login", (req, res, next) => {
-  // console.log(req.body);
-  // let loginData = req.body;
-  // MongoClient.connect(url, { useUnifiedTopology: true }, (err, db) => {
-  //   if (err) throw err;
-  //   let myDB = db.db("sample_training");
-  //   myDB
-  //     .collection("users")
-  //     .findOne(
-  //       { email: loginData.email, password: loginData.password },
-  //       (err, result) => {
-  //         if (err) throw err;
-  //         if (result !== null) {
-  //           res.send({
-  //             logged: true,
-  //             uname: result.uname,
-  //             email: result.email,
-  //           });
-  //         } else {
-  //           res.send({ logged: false });
-  //         }
-  //         db.close();
-  //       }
-  //     );
-  // });
+  console.log(req.body);
+  let loginData = req.body;
+  UserModel.find({ email: loginData.email, password: loginData.password })
+    .then((result) => {
+      if (result.length) {
+        res.send({
+          logged: true,
+          uname: result.uname,
+          email: result.email,
+        });
+      } else {
+        res.send({ logged: false });
+      }
+      console.log(result);
+    })
+    .catch((err) => res.send(err));
 });
 
 router.put("/update", (req, res, next) => {
