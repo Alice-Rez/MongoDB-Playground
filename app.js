@@ -4,6 +4,7 @@ var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 var cors = require("cors");
+let mongoose = require("mongoose");
 
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
@@ -11,6 +12,19 @@ var companiesRouter = require("./routes/companies");
 var projectsRouter = require("./routes/projects");
 
 var app = express();
+
+let url =
+  "mongodb+srv://admin:fahim@cluster0.zhe8p.mongodb.net/sample_training?retryWrites=true&w=majority";
+
+mongoose.connect(url, {
+  useCreateIndex: true,
+  useUnifiedTopology: true,
+  useNewUrlParser: true,
+});
+let db = mongoose.connection;
+db.on("error", () => {
+  console.log("error in connection");
+});
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
