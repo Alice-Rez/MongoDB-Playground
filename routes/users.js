@@ -23,7 +23,7 @@ router.post("/register", (req, res, next) => {
 router.post("/login", (req, res, next) => {
   console.log(req.body);
   let loginData = req.body;
-  UserModel.find({ email: loginData.email, password: loginData.password })
+  UserModel.find(loginData)
     .then((result) => {
       if (result.length) {
         console.log(result);
