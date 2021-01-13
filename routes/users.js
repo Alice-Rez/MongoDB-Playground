@@ -27,6 +27,14 @@ router.get("/all", function (req, res, next) {
     .catch((err) => res.send(err));
 });
 
+router.get("/:id", function (req, res, next) {
+  let user = req.params.id;
+  UserModel.find({ email: user })
+    .select("-password")
+    .then((result) => res.send(result))
+    .catch((err) => res.send(err));
+});
+
 router.post("/register", uploads.single("file"), (req, res, next) => {
   console.log(req.body);
   let newUser = req.body;
@@ -35,7 +43,7 @@ router.post("/register", uploads.single("file"), (req, res, next) => {
     email: newUser.email,
     uname: newUser.uname,
     password: newUser.password,
-    profileImage: "http://localhost:3000/" + req.file.path,
+    profileImage: "http://localhost:3500/" + req.file.path,
   });
 
   addedUser
