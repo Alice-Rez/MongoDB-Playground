@@ -5,6 +5,7 @@ let UserSchema = new mongoose.Schema({
   email: { type: String, unique: true, required: true },
   uname: { type: String, unique: true, required: true },
   password: { type: String, required: true },
+  profileImage: { type: String },
 });
 
 let UserModel = mongoose.model("Alice-user", UserSchema);
