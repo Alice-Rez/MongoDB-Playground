@@ -13,7 +13,7 @@ let storage = multer.diskStorage({
       null,
       /*req.body.email.split("@")[0] + "-" + Date.now() + "." // +
       file.mimetype.split("/")[1] */
-      uuidv4() + file.mimetype.split("/")[1]
+      uuidv4() + "." + file.mimetype.split("/")[1]
     );
   },
 });
