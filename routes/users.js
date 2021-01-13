@@ -72,12 +72,23 @@ router.post("/login", (req, res, next) => {
     .catch((err) => res.send(err));
 });
 
-router.put("/update", (req, res, next) => {
+router.put("/updatePWD", (req, res, next) => {
   console.log(req.body);
   let { userID, password, newPassword } = req.body;
   UserModel.updateOne(
     { email: userID, password: password },
     { password: newPassword }
+  )
+    .then((result) => res.send(result))
+    .catch((err) => res.send(err));
+});
+
+router.put("/updatePhoto", uploads.single("file"), (req, res, next) => {
+  console.log(req.body);
+  let { userID } = req.body;
+  UserModel.updateOne(
+    { email: userID },
+    { profileImage: "http://localhost:3500/" + req.file.path }
   )
     .then((result) => res.send(result))
     .catch((err) => res.send(err));
