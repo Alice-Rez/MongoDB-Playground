@@ -18,7 +18,9 @@ let storage = multer.diskStorage({
   },
 });
 
-let uploads = multer({ storage: storage });
+// we can limit size of file - imageSize is in bites
+
+let uploads = multer({ storage: storage, limits: { fileSize: 1000000 } });
 
 /* GET users listing. */
 router.get("/all", function (req, res, next) {
@@ -37,7 +39,19 @@ router.get("/:id", function (req, res, next) {
 
 router.post("/register", uploads.single("file"), (req, res, next) => {
   console.log(req.body);
+  req.check("fullName", "your full name shall contain just letters").isAlpha();
+  req
+    .check("email", "e-mail do not correspond typical rules for email")
+    .isEmail();
+  req
+    .check(
+      "password",
+      "your password is too short, you need at least 10 characters"
+    )
+    .isLength({ min: 10 });
+  req.check("uname", "please use just letters and numbers in your username");
   let newUser = req.body;
+
   let addedUser = new UserModel({
     fullName: newUser.fullName,
     email: newUser.email,
