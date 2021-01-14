@@ -49,21 +49,30 @@ router.post("/register", uploads.single("file"), (req, res, next) => {
       "your password is too short, you need at least 10 characters"
     )
     .isLength({ min: 10 });
-  req.check("uname", "please use just letters and numbers in your username");
-  let newUser = req.body;
+  req
+    .check("uname", "please use just letters and numbers in your username")
+    .isAlphanumeric();
 
-  let addedUser = new UserModel({
-    fullName: newUser.fullName,
-    email: newUser.email,
-    uname: newUser.uname,
-    password: newUser.password,
-    profileImage: "http://localhost:3500/" + req.file.path,
-  });
+  let errors = req.validationErrors();
 
-  addedUser
-    .save()
-    .then((result) => res.send(result))
-    .catch((err) => res.send(err));
+  if (errors) {
+    res.send({ msg: errors });
+  } else {
+    let newUser = req.body;
+
+    let addedUser = new UserModel({
+      fullName: newUser.fullName,
+      email: newUser.email,
+      uname: newUser.uname,
+      password: newUser.password,
+      profileImage: "http://localhost:3500/" + req.file.path,
+    });
+
+    addedUser
+      .save()
+      .then((result) => res.send(result))
+      .catch((err) => res.send(err));
+  }
 });
 
 router.post("/login", (req, res, next) => {
