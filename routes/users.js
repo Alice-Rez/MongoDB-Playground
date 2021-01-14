@@ -37,7 +37,7 @@ router.get("/:id", function (req, res, next) {
     .catch((err) => res.send(err));
 });
 
-router.post("/register", uploads.single("file"), (req, res, next) => {
+router.post("/register", (req, res, next) => {
   console.log(req.body);
   req.check("fullName", "fullname").custom((value) => {
     return value.match(/^[A-Za-z ]+$/);
@@ -47,14 +47,6 @@ router.post("/register", uploads.single("file"), (req, res, next) => {
   req.check("uname", "uname").isAlphanumeric();
 
   let errors = req.validationErrors();
-
-  let path;
-
-  if (req.file.path) {
-    path = "http://localhost:3500/" + req.file.path;
-  } else {
-    path = "";
-  }
 
   if (errors) {
     res.send({ msg: errors });
@@ -67,7 +59,6 @@ router.post("/register", uploads.single("file"), (req, res, next) => {
       email: newUser.email,
       uname: newUser.uname,
       password: newUser.password,
-      profileImage: path,
     });
 
     addedUser
