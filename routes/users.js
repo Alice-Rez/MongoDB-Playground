@@ -39,25 +39,27 @@ router.get("/:id", function (req, res, next) {
 
 router.post("/register", uploads.single("file"), (req, res, next) => {
   console.log(req.body);
-  req.check("fullName", "your full name shall contain just letters").isAlpha();
-  req
-    .check("email", "e-mail do not correspond typical rules for email")
-    .isEmail();
-  req
-    .check(
-      "password",
-      "your password is too short, you need at least 10 characters"
-    )
-    .isLength({ min: 10 });
-  req
-    .check("uname", "please use just letters and numbers in your username")
-    .isAlphanumeric();
+  req.check("fullName", "fullname").custom((value) => {
+    return value.match(/^[A-Za-z ]+$/);
+  });
+  req.check("email", "email").isEmail();
+  req.check("password", "password length").isLength({ min: 10 });
+  req.check("uname", "uname").isAlphanumeric();
 
   let errors = req.validationErrors();
+
+  let path;
+
+  if (req.file.path) {
+    path = "http://localhost:3500/" + req.file.path;
+  } else {
+    path = "";
+  }
 
   if (errors) {
     res.send({ msg: errors });
   } else {
+    console.log(req.body);
     let newUser = req.body;
 
     let addedUser = new UserModel({
@@ -65,7 +67,7 @@ router.post("/register", uploads.single("file"), (req, res, next) => {
       email: newUser.email,
       uname: newUser.uname,
       password: newUser.password,
-      profileImage: "http://localhost:3500/" + req.file.path,
+      profileImage: path,
     });
 
     addedUser
