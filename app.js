@@ -6,6 +6,7 @@ var logger = require("morgan");
 var cors = require("cors");
 let mongoose = require("mongoose");
 let expressValidator = require("express-validator");
+let expressSession = require("express-session");
 
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
@@ -31,11 +32,17 @@ app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "hbs");
 
 app.use(cors());
+// morgan package for logging HTTP requests
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+// middleware for validating of the data from request
 app.use(expressValidator());
+// middleware for using express session (to store if somebody is logged or not)
+app.use(
+  expressSession({ secret: "max", saveUninitialized: false, resave: false })
+);
 app.use(express.static(path.join(__dirname, "public")));
 
 // to display image when the address is called
