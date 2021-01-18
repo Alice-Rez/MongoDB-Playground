@@ -29,7 +29,7 @@ router.get("/all", function (req, res, next) {
     .catch((err) => res.send(err));
 });
 
-router.get("/:id", function (req, res, next) {
+router.get("/info/:id", function (req, res, next) {
   if (req.session.isLogged) {
     let user = req.params.id;
     UserModel.find({ email: user })
@@ -107,8 +107,7 @@ router.post("/login", (req, res, next) => {
 
 router.get("/logout", (req, res, next) => {
   req.session.isLogged = false;
-  console.log(req.session.isLogged);
-  res.send({ logged: req.session.isLogged });
+  res.send("nothing here");
 });
 
 router.put("/updatePWD", (req, res, next) => {
