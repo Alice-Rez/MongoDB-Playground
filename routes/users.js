@@ -43,6 +43,18 @@ router.post("/register", (req, res, next) => {
     return value.match(/^[A-Za-z ]+$/);
   });
   req.check("email", "email").isEmail();
+  // req
+  //   .check("email", "user already exists")
+  //   .normalizeEmail()
+  //   .custom((validateEmail) => {
+  //     UserModel.find({ email: validateEmail })
+  //       .then((users) => {
+  //         if (users.length) {
+  //           return false;
+  //         }
+  //       })
+  //       .catch((err) => console.log(err));
+  //   });
   req.check("password", "password length").isLength({ min: 10 });
   req.check("uname", "uname").isAlphanumeric();
 
