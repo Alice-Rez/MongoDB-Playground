@@ -107,7 +107,7 @@ router.post("/login", (req, res, next) => {
 
 router.get("/logout", (req, res, next) => {
   req.session.isLogged = false;
-  res.send("nothing here");
+  res.send({ logged: req.session.isLogged });
 });
 
 router.put("/updatePWD", (req, res, next) => {
