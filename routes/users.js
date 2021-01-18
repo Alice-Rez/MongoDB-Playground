@@ -30,11 +30,15 @@ router.get("/all", function (req, res, next) {
 });
 
 router.get("/:id", function (req, res, next) {
-  let user = req.params.id;
-  UserModel.find({ email: user })
-    .select("-password")
-    .then((result) => res.send(result))
-    .catch((err) => res.send(err));
+  if (req.session.isLogged) {
+    let user = req.params.id;
+    UserModel.find({ email: user })
+      .select("-password")
+      .then((result) => res.send(result))
+      .catch((err) => res.send(err));
+  } else {
+    res.send("you have to log-in to see this information");
+  }
 });
 
 router.post("/register", (req, res, next) => {
@@ -86,9 +90,10 @@ router.post("/login", (req, res, next) => {
   UserModel.find(loginData)
     .then((result) => {
       if (result.length) {
+        req.session.isLogged = true;
         console.log(result);
         res.send({
-          logged: true,
+          logged: req.session.isLogged,
           uname: result[0].uname,
           email: result[0].email,
         });
@@ -98,6 +103,12 @@ router.post("/login", (req, res, next) => {
       console.log(result);
     })
     .catch((err) => res.send(err));
+});
+
+router.get("/logout", (req, res, next) => {
+  req.session.isLogged = false;
+  console.log(req.session.isLogged);
+  res.send({ logged: req.session.isLogged });
 });
 
 router.put("/updatePWD", (req, res, next) => {
